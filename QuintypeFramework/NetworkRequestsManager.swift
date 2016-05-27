@@ -13,24 +13,29 @@ public class NetworkRequestsManager: NSObject {
     static let sharedManager:NetworkRequestsManager = NetworkRequestsManager.init()
     private lazy var sessionManager:SessionManager = SessionManager.init()
     
-    public func getToURL(url:String,withParameters parameters:[String:AnyObject]?,andSuccessHandler successHandler:(JSON?)->Void, andFailureHandler failureHandler:(NSError)->Void){
+    public func getToURL(url:String,withParameters parameters:[String:AnyObject]?,andSuccessHandler successHandler:(JSON?)->Void, andFailureHandler failureHandler:(NSError?)->Void){
         
+            self.getToURLWithHeaders(nil, forURL: url, withParameters: parameters, andSuccessHandler: successHandler, andFailureHandler: failureHandler)
+    }
+    
+    public func getToURLWithHeaders(headers:[String:String]?,forURL url:String,withParameters parameters:[String:AnyObject]?,andSuccessHandler successHandler:(JSON?)->Void, andFailureHandler failureHandler:(NSError?)->Void){
         let manager:Manager = sessionManager.manager
         
-        manager.request(.GET, url, parameters: parameters, encoding: .URL, headers: nil)
-        .responseJSON { (response) in
-            if response.result.isSuccess{
-                
-                if let responseData = response.data{
+        manager.request(.GET, url, parameters: parameters, encoding: .URL, headers: headers)
+            .responseJSON { (response) in
+                if response.result.isSuccess{
                     
-                    successHandler(JSON.init(data:responseData))
+                    if let responseData = response.data{
+                        
+                        successHandler(JSON.init(data:responseData))
+                    }
                 }
-            }
-            
-            else{
-                failureHandler(response.result.error!)
-            }
+                    
+                else{
+                    failureHandler(response.result.error!)
+                }
         }
+
     }
     
     private override init(){
