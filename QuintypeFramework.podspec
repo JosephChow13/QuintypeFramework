@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "QuintypeFramework"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "A sample library to check network requests using ALamofire and pasring response using SwiftyJson and creating a pod for tesing"
 
   # This description is used to generate tags and improve search results.
